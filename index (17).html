@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nourou Tech</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: site d'une page, colonne centrée étroite pensée pour téléphone. Une carte de l'Afrique violette tourne doucement en fond, fixe, derrière le contenu. */
+:root {
+  --bg: #f6f3fc;
+  --surface: #ffffff;
+  --ink: #1d1233;
+  --muted: #65577f;
+  --line: #ddd3f0;
+  --accent: #6d28d9;
+  --accent-ink: #ffffff;
+  --alt: #a21caf;
+  --alt-ink: #ffffff;
+  --alt-soft: #f0e6fb;
+  --warn-soft: #f3e8ff;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f0820; --surface: #1a1033; --ink: #efe8fb; --muted: #aa9ec7; --line: #342652;
+    --accent: #a78bfa; --accent-ink: #14072e; --alt: #e879f9; --alt-ink: #2a0836; --alt-soft: #2a1748; --warn-soft: #2a1748;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f0820; --surface: #1a1033; --ink: #efe8fb; --muted: #aa9ec7; --line: #34265e;
+  --accent: #a78bfa; --accent-ink: #14072e; --alt: #e879f9; --alt-ink: #2a0836; --alt-soft: #2a1748; --warn-soft: #2a1748;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+#globe { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 52px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.2rem, 9vw, 3.1rem); font-weight: 700; letter-spacing: -0.025em; }
+h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--alt); }
+.lead { color: var(--muted); font-size: 1.05rem; max-width: 46ch; }
+section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 16px; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.stripe { height: 20px; border-radius: 4px; border: 1px solid var(--line); background-color: var(--surface);
+  background-image: linear-gradient(135deg, var(--accent) 25%, transparent 25%), linear-gradient(225deg, var(--accent) 25%, transparent 25%), linear-gradient(315deg, var(--alt) 25%, transparent 25%), linear-gradient(45deg, var(--alt) 25%, transparent 25%);
+  background-size: 20px 20px; background-position: -10px 0, -10px 0, 0 0, 0 0; }
+.link { color: var(--ink); font-weight: 500; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--accent); }
+
+.hero { display: flex; flex-direction: column; gap: 18px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none;
+  font: inherit; font-weight: 700; cursor: pointer; border: 0; border-radius: 12px; padding: 14px 20px; min-height: 52px;
+  background: var(--accent); color: var(--accent-ink);
+}
+.btn.alt { background: var(--alt); color: var(--alt-ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn:focus-visible, .link:focus-visible, .card a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+.cards { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.card .tag { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.card p { color: var(--muted); font-size: 0.95rem; }
+.card ul { margin: 4px 0 0; padding-left: 18px; font-size: 0.92rem; display: flex; flex-direction: column; gap: 3px; }
+.card.other { background: var(--alt-soft); border-color: transparent; }
+
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding-bottom: 20px; position: relative; counter-increment: s; }
+.steps li::before {
+  content: counter(s); width: 40px; height: 40px; border-radius: 50%; background: var(--alt); color: var(--alt-ink);
+  display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 500; z-index: 1;
+}
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: var(--line); }
+.steps h3 { margin-top: 8px; }
+.steps p { color: var(--muted); font-size: 0.95rem; margin-top: 2px; }
+
+.contact { background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 22px; gap: 18px; }
+.contact form { display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font-weight: 500; font-size: 0.9rem; }
+.field input, .field select, .field textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; width: 100%; min-width: 0;
+}
+.field textarea { min-height: 96px; resize: vertical; }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.err { font-size: 0.85rem; color: var(--accent); min-height: 1.2em; }
+.row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 480px) { .row { grid-template-columns: 1fr 1fr; } }
+.hint { font-size: 0.85rem; color: var(--muted); }
+
+.ticket { border: 1.5px solid var(--alt); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--alt-soft); }
+.msg { font-family: var(--font-mono); font-size: 0.82rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions > * { flex: 1 1 180px; }
+.direct { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.92rem; color: var(--muted); }
+.direct strong { color: var(--ink); font-family: var(--font-mono); font-weight: 500; user-select: all; }
+
+footer { display: flex; flex-direction: column; gap: 10px; color: var(--muted); font-size: 0.85rem; }
+@media (prefers-reduced-motion: no-preference) { .btn, .card { transition: background 0.15s, border-color 0.15s; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<canvas id="globe" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div class="brand">Nourou <span>Tech</span></div>
+      <a class="link" href="#contact">Nous contacter</a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="stripe" aria-hidden="true"></div>
+    <p class="eyebrow">Akwaba · Création web à Abidjan</p>
+    <h1>On crée ton site web, ton logo et ton appli.</h1>
+    <p class="lead">Tu as une activité et tu veux que tes clients te trouvent sur internet ? Dis-nous ce dont tu as besoin, on te répond et on te propose un devis adapté.</p>
+    <div class="cta-row">
+      <a class="btn" href="#contact">Demander un devis</a>
+      <a class="btn ghost" href="#services">Voir les services</a>
+    </div>
+  </div>
+
+  <section id="services">
+    <p class="eyebrow">Ce qu'on fait</p>
+    <h2>Des services simples pour lancer ton activité en ligne</h2>
+    <div class="cards">
+      <article class="card">
+        <span class="tag">Identité</span>
+        <h3>Logo et couleurs</h3>
+        <p>Un logo clair pour ta marque, avec ses couleurs, utilisable sur tes réseaux, tes affiches et tes factures.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Vente sur WhatsApp</span>
+        <h3>Catalogue WhatsApp</h3>
+        <p>Une page avec tes produits et un bouton « Commander » qui envoie la commande directement sur ton WhatsApp.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Présence en ligne</span>
+        <h3>Site vitrine</h3>
+        <p>Un site qui présente ton activité, adapté au téléphone.</p>
+        <ul>
+          <li>Accueil, services, photos</li>
+          <li>Horaires et plan pour te trouver</li>
+          <li>Bouton pour te contacter sur WhatsApp</li>
+        </ul>
+      </article>
+      <article class="card other">
+        <span class="tag">Sur mesure</span>
+        <h3>Autre projet ?</h3>
+        <p>Une idée d'application ou de site plus avancé ? Explique-nous ton besoin et on regarde ensemble ce qui est possible.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Comment ça se passe</p>
+    <h2>De ton message à ton site en ligne</h2>
+    <ol class="steps">
+      <li><div><h3>Tu nous écris</h3><p>Remplis le formulaire ci-dessous ou écris-nous sur WhatsApp.</p></div></li>
+      <li><div><h3>On parle de ton besoin</h3><p>On te pose quelques questions, puis on te propose un devis clair.</p></div></li>
+      <li><div><h3>On crée ton projet</h3><p>Tu vois le résultat et tu nous dis ce qu'il faut changer.</p></div></li>
+      <li><div><h3>Mise en ligne</h3><p>Ton site est publié avec son lien, prêt à partager à tes clients.</p></div></li>
+    </ol>
+  </section>
+
+  <section id="contact" class="contact">
+    <p class="eyebrow">Contact</p>
+    <h2>Parle-nous de ton projet</h2>
+    <p class="lead">Écris quelques lignes. Ton message part sur WhatsApp et on te répond.</p>
+    <form id="form" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="nom">Ton nom</label>
+          <input id="nom" name="nom" type="text" autocomplete="name" placeholder="Ex : Awa Koné">
+          <p class="err" id="err-nom" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="tel">Ton numéro</label>
+          <input id="tel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07 00 00 00 00">
+          <p class="err" id="err-tel" role="alert"></p>
+        </div>
+      </div>
+      <div class="field">
+        <label for="service">Ce que tu cherches</label>
+        <select id="service" name="service">
+          <option>Un site vitrine</option>
+          <option>Un catalogue WhatsApp</option>
+          <option>Un logo</option>
+          <option>Une application</option>
+          <option>Autre chose</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="note">Ton projet en quelques mots</label>
+        <textarea id="note" name="note" placeholder="Ex : Je tiens un salon de coiffure à Cocody, je veux un site pour montrer mes coiffures."></textarea>
+        <p class="err" id="err-note" role="alert"></p>
+      </div>
+      <button class="btn" type="submit">Préparer mon message</button>
+    </form>
+    <div id="result" hidden aria-live="polite"></div>
+    <p class="direct" id="direct" hidden>Ou écris-nous directement : <strong id="direct-num"></strong></p>
+  </section>
+
+  <footer>
+    <div class="stripe" aria-hidden="true"></div>
+    <p>Nourou Tech · Abidjan, Côte d'Ivoire · Fait en Afrique, pour l'Afrique</p>
+  </footer>
+</div>
+
+<script>
+/* ====== À MODIFIER ======
+   Mets ton numéro WhatsApp au format international sans le +, par exemple 2250700000000. */
+var WHATSAPP_NUMBER = "2250504736344";
+/* ======================== */
+
+var $ = function (id) { return document.getElementById(id); };
+function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+if (WHATSAPP_NUMBER) {
+  var n = WHATSAPP_NUMBER;
+  $("direct-num").textContent = "+" + n.slice(0, 3) + " " + n.slice(3).replace(/(\d{2})(?=\d)/g, "$1 ");
+  $("direct").hidden = false;
+}
+
+function validate() {
+  var ok = true;
+  function set(id, msg) { $("err-" + id).textContent = msg; if (msg) ok = false; }
+  set("nom", $("nom").value.trim().length >= 3 ? "" : "Écris ton nom.");
+  set("tel", $("tel").value.replace(/\D/g, "").length === 10 ? "" : "Entre ton numéro à 10 chiffres, par exemple 0700000000.");
+  set("note", $("note").value.trim().length >= 10 ? "" : "Écris au moins une courte phrase sur ton projet.");
+  return ok;
+}
+
+$("form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  if (!validate()) return;
+  var msg = "Bonjour Nourou Tech, je m'appelle " + $("nom").value.trim() + ".\nJe cherche : " + $("service").value +
+    ".\nMon projet : " + $("note").value.trim() + "\nMon numéro : " + $("tel").value.replace(/\D/g, "");
+  var link = WHATSAPP_NUMBER
+    ? '<a class="btn alt" href="https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg) + '">Envoyer sur WhatsApp</a>'
+    : "";
+  var el = $("result");
+  el.hidden = false;
+  el.innerHTML = '<div class="ticket"><h3>Ton message est prêt</h3>' +
+    '<div class="msg" id="msg">' + esc(msg) + '</div>' +
+    '<div class="actions">' + link + '<button type="button" class="btn ghost" id="copy">Copier le message</button></div>' +
+    '<p class="hint" id="copied" role="status">' + (WHATSAPP_NUMBER ? "Appuie sur « Envoyer sur WhatsApp » pour nous l'envoyer." : "Copie ce message et envoie-le-nous sur WhatsApp.") + '</p></div>';
+  $("copy").onclick = function () {
+    var done = function () { $("copied").textContent = "Message copié."; };
+    var fail = function () {
+      var range = document.createRange(); range.selectNodeContents($("msg"));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      $("copied").textContent = "Appuie longuement sur le texte sélectionné pour le copier.";
+    };
+    try { navigator.clipboard.writeText(msg).then(done, fail); } catch (err) { fail(); }
+  };
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* Carte de l'Afrique en points, qui pivote doucement sur un globe. Décoratif : la Côte d'Ivoire est en couleur vive avec un repère sur Abidjan. */
+(function () {
+  var cv = document.getElementById("globe");
+  var ctx = cv && cv.getContext("2d");
+  if (!ctx) return;
+
+  /* Contours simplifiés [longitude, latitude] */
+  var AFRICA = [[-5.9,35.8],[-2.0,35.1],[3.0,36.8],[10.2,37.3],[11.0,37.0],[10.5,34.7],[10.0,33.9],[13.2,32.9],[15.0,32.4],[16.6,31.2],[18.5,30.3],[20.1,32.1],[22.6,32.8],[25.2,31.6],[27.2,31.4],[29.9,31.2],[32.3,31.3],[32.55,29.95],[33.1,28.4],[33.8,27.2],[34.3,26.1],[35.5,23.9],[36.9,22.0],[37.2,19.6],[39.5,15.6],[42.7,13.0],[43.1,11.6],[45.0,10.4],[48.0,11.2],[51.3,11.8],[51.0,10.4],[49.8,8.0],[49.0,5.3],[45.3,2.0],[42.5,-0.4],[40.9,-2.3],[39.7,-4.1],[39.3,-6.8],[39.5,-8.9],[40.2,-10.3],[40.5,-12.9],[40.7,-14.5],[36.9,-17.9],[34.9,-19.8],[35.5,-23.9],[32.6,-26.0],[31.0,-29.9],[27.9,-33.0],[25.6,-34.0],[20.0,-34.8],[18.4,-34.0],[17.9,-32.0],[15.2,-26.6],[14.5,-22.9],[11.8,-17.3],[13.5,-12.4],[13.2,-8.8],[12.3,-6.0],[11.8,-4.8],[8.7,-0.6],[9.4,0.4],[9.8,1.9],[9.7,4.0],[8.3,4.5],[6.0,4.3],[3.4,6.4],[-0.2,5.5],[-2.1,4.75],[-4.0,5.3],[-6.6,4.7],[-7.7,4.4],[-10.8,6.3],[-13.2,8.5],[-13.7,9.5],[-15.6,11.9],[-16.6,13.4],[-17.5,14.7],[-16.5,16.0],[-16.0,18.1],[-17.0,20.8],[-15.9,23.7],[-13.2,27.1],[-9.6,30.4],[-7.6,33.6],[-6.2,35.2]];
+  var MADA = [[49.3,-12.0],[50.4,-15.5],[49.4,-18.2],[48.3,-22.0],[47.0,-25.0],[45.1,-25.6],[43.7,-23.4],[44.3,-20.3],[46.3,-15.7],[48.2,-13.4]];
+  var CI = [[-7.5,4.35],[-6.6,4.7],[-4.0,5.25],[-2.95,5.1],[-2.7,6.2],[-3.2,7.2],[-2.6,8.0],[-2.5,9.4],[-3.0,10.7],[-5.2,10.35],[-6.2,10.4],[-7.4,10.2],[-8.3,10.0],[-8.5,8.9],[-8.5,7.7],[-8.0,6.9],[-7.55,6.1],[-7.5,5.0]];
+
+  var RAD = Math.PI / 180, TAU = 6.2832, TILT = 0.2;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W = 0, H = 0, R = 0, CY = 0, frame = 0, cols = { a: "#6d28d9", b: "#a21caf", ink: "#1d1233" };
+  var ABJ = { lat: 5.36 * RAD, lon: -4.02 * RAD };
+  var still = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var t0 = performance.now();
+  var ct = Math.cos(TILT), st = Math.sin(TILT);
+
+  function inside(poly, x, y) {
+    var c = false;
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c;
+    }
+    return c;
+  }
+  var land = [], ivoire = [], la, lo;
+  for (la = -35; la <= 37; la += 1.9) for (lo = -18; lo <= 52; lo += 1.9) {
+    if (inside(CI, lo, la)) continue;
+    if (inside(AFRICA, lo, la) || inside(MADA, lo, la)) land.push([la * RAD, lo * RAD]);
+  }
+  for (la = 4; la <= 11; la += 0.7) for (lo = -9; lo <= -2; lo += 0.7) {
+    if (inside(CI, lo, la)) ivoire.push([la * RAD, lo * RAD]);
+  }
+
+  function rgba(hex, a) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+  }
+  function readColors() {
+    var cs = getComputedStyle(document.documentElement);
+    var a = cs.getPropertyValue("--accent").trim(), b = cs.getPropertyValue("--alt").trim(), i = cs.getPropertyValue("--ink").trim();
+    if (/^#[0-9a-f]{3,6}$/i.test(a)) cols.a = a;
+    if (/^#[0-9a-f]{3,6}$/i.test(b)) cols.b = b;
+    if (/^#[0-9a-f]{3,6}$/i.test(i)) cols.ink = i;
+  }
+  function size() {
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    R = Math.min(W * 0.62, H * 0.46);
+    CY = H * 0.5 - R * st;
+  }
+  function pt(lat, lon, rot) {
+    var cl = Math.cos(lat), x = cl * Math.sin(lon + rot), y = Math.sin(lat), z = cl * Math.cos(lon + rot);
+    return [W / 2 + R * x, CY - R * (y * ct - z * st), y * st + z * ct];
+  }
+  function line(points, front, back) {
+    for (var i = 1; i < points.length; i++) {
+      var p = points[i - 1], q = points[i];
+      var path = (p[2] > 0 && q[2] > 0) ? front : back;
+      path.moveTo(p[0], p[1]); path.lineTo(q[0], q[1]);
+    }
+  }
+
+  function draw(now) {
+    if (frame++ % 90 === 0) readColors();
+    var rot = -20 * RAD + (still ? 0 : 0.62 * Math.sin((now - t0) / 5200));
+    var cx = W / 2, cy = CY, i, j, d, p, pts;
+    ctx.clearRect(0, 0, W, H);
+
+    var g = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.35);
+    g.addColorStop(0, rgba(cols.a, 0.16)); g.addColorStop(1, rgba(cols.a, 0));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fillStyle = rgba(cols.a, 0.05); ctx.fill();
+
+    var front = new Path2D(), back = new Path2D();
+    for (i = -60; i <= 60; i += 30) {
+      pts = []; for (j = 0; j <= 96; j++) pts.push(pt(i * RAD, (j / 96) * TAU, rot));
+      line(pts, front, back);
+    }
+    for (i = 0; i < 360; i += 30) {
+      pts = []; for (j = 0; j <= 72; j++) pts.push(pt((-90 + j * 2.5) * RAD, i * RAD, rot));
+      line(pts, front, back);
+    }
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = rgba(cols.a, 0.04); ctx.stroke(back);
+    ctx.strokeStyle = rgba(cols.a, 0.14); ctx.stroke(front);
+
+    ctx.fillStyle = cols.a;
+    for (i = 0; i < land.length; i++) {
+      d = land[i]; p = pt(d[0], d[1], rot);
+      if (p[2] > 0.04) {
+        ctx.globalAlpha = Math.min(0.75, 0.12 + 0.7 * p[2]);
+        ctx.beginPath(); ctx.arc(p[0], p[1], 1.5 + 0.7 * p[2], 0, TAU); ctx.fill();
+      }
+    }
+    ctx.fillStyle = cols.b;
+    for (i = 0; i < ivoire.length; i++) {
+      d = ivoire[i]; p = pt(d[0], d[1], rot);
+      if (p[2] > 0.04) {
+        ctx.globalAlpha = Math.min(0.95, 0.25 + 0.75 * p[2]);
+        ctx.beginPath(); ctx.arc(p[0], p[1], 1.7 + 0.9 * p[2], 0, TAU); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    var m = pt(ABJ.lat, ABJ.lon, rot);
+    if (m[2] > 0.12) {
+      var pulse = still ? 0.5 : ((now - t0) % 2200) / 2200;
+      ctx.beginPath(); ctx.arc(m[0], m[1], 6 + pulse * 18, 0, TAU);
+      ctx.strokeStyle = rgba(cols.b, 0.6 * (1 - pulse)); ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(m[0], m[1], 6, 0, TAU); ctx.fillStyle = cols.b; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = rgba(cols.ink, 0.5); ctx.stroke();
+      if (m[2] > 0.3) {
+        ctx.font = "500 13px 'DM Mono', ui-monospace, monospace";
+        ctx.textAlign = "center";
+        ctx.fillStyle = rgba(cols.ink, 0.85); ctx.fillText("Côte d'Ivoire", m[0], m[1] + 28);
+        ctx.textAlign = "start";
+      }
+    }
+  }
+
+  function loop(now) { draw(now); window.requestAnimationFrame(loop); }
+  function redraw() { draw(performance.now()); }
+  readColors(); size();
+  window.addEventListener("resize", function () { size(); if (still) redraw(); });
+  try { new MutationObserver(function () { readColors(); if (still) redraw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] }); } catch (e) {}
+  try { window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { readColors(); if (still) redraw(); }); } catch (e) {}
+  if (still) redraw(); else window.requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>
